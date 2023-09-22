@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Kaufland Öffnungszeiten</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+    #openingHours {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    .current-day {
+      font-weight: bold;
+    }
+    .open {
+      color: green;
+    }
+    .closed {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Öffnungszeiten für Kaufland</h1>
+
+  <div id="openingHours"></div>
+
+  <script>
+    const openingHours = {
+        Montag: "07:00 - 20:00",
+        Dienstag: "07:00 - 20:00",
+        Mittwoch: "07:00 - 20:00",
+        Donnerstag: "07:00 - 22:00",
+        Freitag: "07:00 - 22:00",
+        Samstag: "07:00 - 22:00",
+        Sonntag: "Geschlossen"
+    };
+
+    function displayOpeningHoursAndStatus(openingHours) {
+        const openingHoursDiv = document.getElementById("openingHours");
+        const now = new Date();
+        const currentDay = now.toLocaleDateString("de-DE", { weekday: "long" });
+        const currentTime = now.getHours() + ":" + (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
+
+        let openingHoursHTML = "<ul>";
+
+        for (let day in openingHours) {
+            openingHoursHTML += "<li" + (day === currentDay ? ' class="current-day"' : '') + ">" + day + ": " + openingHours[day];
+
+            if (day === currentDay) {
+                const [openingTime, closingTime] = openingHours[day].split(" - ");
+                if (isCurrentlyOpen(openingTime, closingTime, currentTime)) {
+                    openingHoursHTML += " <span class='open'>(Geöffnet)</span>";
+                } else {
+                    openingHoursHTML += " <span class='closed'>(Geschlossen)</span>";
+                }
+            }
+
+            openingHoursHTML += "</li>";
+        }
+
+        openingHoursHTML += "</ul>";
+        openingHoursDiv.innerHTML = openingHoursHTML;
+    }
+
+    // Funktion zur Überprüfung, ob der Laden gerade geöffnet ist
+    function isCurrentlyOpen(openingTime, closingTime, currentTime) {
+        return currentTime >= openingTime && currentTime <= closingTime;
+    }
+
+    // Öffnungszeiten und Status anzeigen
+    displayOpeningHoursAndStatus(openingHours);
+  </script>
+</body>
+</html>
